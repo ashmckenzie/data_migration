@@ -1,8 +1,9 @@
 require 'data_migration/base'
 require 'data_migration/migration'
 require 'data_migration/migrations'
-require 'data_migration/install_generator'
-require 'data_migration/new_generator'
+require 'data_migration/generators/base'
+require 'data_migration/generators/install'
+require 'data_migration/generators/new'
 require 'data_migration/version'
 
 module DataMigration

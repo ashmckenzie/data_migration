@@ -8,6 +8,10 @@ module DataMigration
       ActionDispatch::Reloader.prepare!
     end
 
+    def sanitize input
+      ActiveRecord::Base.sanitize(input)
+    end
+
     def execute query
       ActiveRecord::Base.connection.execute(query)
     end

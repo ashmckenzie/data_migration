@@ -8,18 +8,11 @@ module DataMigration
       load(file)
     end
 
-    def self.from_file file
-      self.new(file)
-    end
-
     def up!
       announce 'migrating'
 
-      timing = Benchmark.measure do
-        transaction do
-          klass_instance.up
-          add_version_entry!
-        end
+      timing = process! :up do
+        add_version_entry!
       end
 
       announce "migrated (#{sprintf("%0.4fs", timing.real)})"
@@ -31,11 +24,8 @@ module DataMigration
     def down!
       announce 'reverting'
 
-      timing = Benchmark.measure do
-        transaction do
-          klass_instance.down
-          remove_version_entry!
-        end
+      timing = process! :down do
+        remove_version_entry!
       end
 
       announce "reverting (#{sprintf("%0.4fs", timing.real)})"
@@ -56,6 +46,21 @@ module DataMigration
 
     attr_reader :file
 
+    def measure
+      Benchmark.measure do
+        yield
+      end
+    end
+
+    def process! direction
+      measure do
+        transaction do
+          klass_instance.send(direction)
+          yield
+        end
+      end
+    end
+
     def transaction
       ActiveRecord::Base.transaction do
         yield
@@ -74,14 +79,6 @@ module DataMigration
 
     def remove_version_entry!
       execute("DELETE FROM data_migrations WHERE version = #{sanitize(version)}")
-    end
-
-    def sanitize input
-      ActiveRecord::Base.sanitize(input)
-    end
-
-    def execute query
-      ActiveRecord::Base.connection.execute(query)
     end
 
     def klass_instance

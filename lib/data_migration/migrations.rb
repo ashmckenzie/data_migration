@@ -5,10 +5,14 @@ module DataMigration
       reload!
     end
 
-    def process_migrations! direction = :up
+    def process_migrations!
       pending_migrations.each do |migration|
-        process_migration!(migration, direction)
+        process_migration!(migration, :up)
       end
+    end
+
+    def process_migration! migration, direction
+      migration.send("#{direction}!")
     end
 
     def rollback_migrations! number
@@ -23,10 +27,6 @@ module DataMigration
       raise 'Unknown data migration!' unless processed_migrations[version]
 
       process_migration!(processed_migrations[version], :down)
-    end
-
-    def process_migration! migration, direction = :up
-      migration.send("#{direction}!")
     end
 
     def display_status
@@ -45,7 +45,7 @@ module DataMigration
     def candidate_migrations
       @candidate_migrations ||= begin
         Dir['./db/data_migrations/*.rb'].inject({}) do |all, file|
-          migration = Migration.from_file(File.expand_path(file))
+          migration = Migration.new(File.expand_path(file))
           all[migration.version] = migration
           all
         end
