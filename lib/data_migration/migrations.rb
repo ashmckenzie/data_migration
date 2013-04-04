@@ -49,7 +49,7 @@ module DataMigration
 
     def candidate_migrations
       @candidate_migrations ||= begin
-        Dir['./db/data_migrations/*.rb'].inject({}) do |all, file|
+        Dir['./db/data_migrations/*.rb'].sort.inject({}) do |all, file|
           migration = Migration.new(File.expand_path(file))
           all[migration.version] = migration
           all
