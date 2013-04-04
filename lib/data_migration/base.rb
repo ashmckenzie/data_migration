@@ -3,11 +3,6 @@ module DataMigration
 
     private
 
-    def reload!
-      ActionDispatch::Reloader.cleanup!
-      ActionDispatch::Reloader.prepare!
-    end
-
     def sanitize input
       ActiveRecord::Base.sanitize(input)
     end

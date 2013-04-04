@@ -42,6 +42,11 @@ module DataMigration
 
     private
 
+    def reload!
+      ActionDispatch::Reloader.cleanup!
+      ActionDispatch::Reloader.prepare!
+    end
+
     def candidate_migrations
       @candidate_migrations ||= begin
         Dir['./db/data_migrations/*.rb'].inject({}) do |all, file|
