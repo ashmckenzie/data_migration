@@ -39,6 +39,10 @@ This drops a new schema migration into `db/migrate` called `YYYYMMDDHHMMSS_add_d
 ### Data migrations status
 
     $ rake db:data_migrate:status
+    
+## TODO
+
+1. Specs! 
 
 ## Contributing
 
