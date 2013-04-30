@@ -1,6 +1,11 @@
 # DataMigration
 
-DataMigration adds the ability to create data migration files (similar to Rails schema migrations) and migrate them.  The main benefit is they are separate from Rails schema migrations and avoid problems such as cached columns.
+DataMigration adds the ability to create data migration files (similar to Rails schema migrations) and migrate them.  The main benefit is they are separate from Rails schema migrations and can therefore be run at different stages.
+
+## Use cases
+
+* Run 'one off' rake tasks
+* Run data inserts/updates, separate from schema migrations
 
 ## Installation
 
